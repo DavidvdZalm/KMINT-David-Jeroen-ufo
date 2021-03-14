@@ -28,7 +28,7 @@ target_include_directories(ufo-common PRIVATE
   include)
 
 add_executable(ufo
-  src/main.cpp)
+  src/main.cpp src/kmint/ufo/states/tank/tankBaseState.cpp include/kmint/ufo/states/tank/tankBaseState.h src/kmint/ufo/states/tank/roamTankState.cpp include/kmint/ufo/states/tank/roamTankState.h src/kmint/ufo/states/tank/tankStateFactory.cpp include/kmint/ufo/states/tank/tankStateFactory.h src/kmint/ufo/states/tank/searchGrenade.cpp include/kmint/ufo/states/tank/searchGrenade.h src/kmint/ufo/states/tank/searchAndre.cpp include/kmint/ufo/states/tank/searchAndre.h src/kmint/ufo/states/tank/searchShield.cpp include/kmint/ufo/states/tank/searchShield.h src/kmint/ufo/states/tank/flee.cpp include/kmint/ufo/states/tank/flee.h)
 target_link_libraries(ufo PRIVATE ufo-common)
 
 add_custom_target(ufo-resources ALL

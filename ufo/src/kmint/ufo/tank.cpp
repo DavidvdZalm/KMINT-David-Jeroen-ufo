@@ -3,6 +3,7 @@
 #include "kmint/ufo/node_algorithm.hpp"
 #include "kmint/random.hpp"
 #include <iostream>
+#include <kmint/ufo/states/tank/roamTankState.h>
 
 namespace kmint::ufo {
 
@@ -23,14 +24,16 @@ graphics::image tank_image(tank_type t) {
 
 tank::tank(map::map_graph& g, map::map_node& initial_node, tank_type t)
 	: play::map_bound_actor{ initial_node }, type_{t},
-	drawable_{ *this, graphics::image{tank_image(t)} } {}
+	drawable_{ *this, graphics::image{tank_image(t)} } {
+    this->stateString = "default";
+    this->tankBaseFactory->registerState("default", std::make_unique<roamTankState>());
+}
 
 void tank::act(delta_time dt) {
 	t_since_move_ += dt;
 	if (to_seconds(t_since_move_) >= 1) {
 		// pick random edge
-		int next_index = random_int(0, node().num_edges());
-		this->node(node()[next_index].to());
+        this->tankBaseFactory->callTick(this->stateString, *this);
 		t_since_move_ = from_seconds(0);
 	}
 	// laat ook zien wat hij ziet
@@ -39,6 +42,20 @@ void tank::act(delta_time dt) {
 		//std::cout << "Saw something at " << a.location().x() << ", "
 		//	<< a.location().y() << "\n";
 	}
+}
+
+void tank::changeState(const std::string& newState)
+{
+    this->stateString = newState;
+}
+
+void tank::setCurrentNode(int nodeId)
+{
+    this->node(node()[nodeId].to());
+}
+
+play::graph_bound_actor<graph::basic_graph<map::map_node_info>>::node_type& tank::getCurrentNode(){
+    return node();
 }
 
 } // namespace kmint::ufo

@@ -1,6 +1,8 @@
 #ifndef KMINT_UFO_TANK_HPP
 #define KMINT_UFO_TANK_HPP
 
+#include <kmint/ufo/states/tank/tankBaseState.h>
+#include <kmint/ufo/states/tank/tankStateFactory.h>
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
@@ -26,11 +28,16 @@ public:
   // geeft het bereik aan waarbinnen een tank
   // andere actors kan waarnemen.
   scalar perception_range() const override { return 200.f; }
+  void changeState(const std::string& newState);
+  void setCurrentNode(int nodeId);
+  play::graph_bound_actor<graph::basic_graph<map::map_node_info>>::node_type& getCurrentNode();
 
 private:
   play::image_drawable drawable_;
   delta_time t_since_move_{};
   tank_type type_;
+  std::unique_ptr<tankStateFactory> tankBaseFactory {std::make_unique<tankStateFactory>()};
+  std::string stateString;
 };
 
 } // namespace ufo
